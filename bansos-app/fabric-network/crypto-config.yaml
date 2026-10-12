@@ -1,0 +1,22 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: cipedes.com
+    Specs:
+      - Hostname: orderer
+
+PeerOrgs:
+  - Name: Kelurahan
+    Domain: kelurahan.cipedes.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: Puskesos
+    Domain: puskesos.cipedes.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Sistem Penyaluran Bantuan Sosial — Kelurahan Cipedes</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f0ede8; color: #1a202c; min-height: 100vh; -webkit-text-size-adjust: 100%; }
+    .login-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem 1rem; background: #f0ede8; }
+    .trust-banner { width: 100%; max-width: 480px; display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: #ecfdf5; border-left: 3px solid #16a34a; border-radius: 0 8px 8px 0; margin-bottom: 1.25rem; }
+    .trust-banner i { font-size: 15px; color: #15803d; flex-shrink: 0; }
+    .trust-banner span { font-size: 12px; color: #15803d; font-weight: 500; line-height: 1.4; }
+    .login-card { width: 100%; max-width: 480px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04); }
+    .login-card-header { padding: 1.5rem 1.75rem 0; }
+    .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
+    .brand-icon { width: 44px; height: 44px; background: #eff6ff; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .brand-icon i { font-size: 22px; color: #1d4ed8; }
+    .brand-text h1 { font-size: 14px; font-weight: 600; color: #1e293b; line-height: 1.3; margin: 0; }
+    .brand-text p { font-size: 11px; color: #64748b; margin: 2px 0 0; line-height: 1.4; }
+    .login-tabs { display: flex; border-bottom: 1px solid #e2e8f0; margin: 0 -1.75rem; padding: 0 1.75rem; }
+    .tab-btn { flex: 1; padding: 11px 0; border: none; background: transparent; font-size: 13px; font-weight: 500; color: #64748b; cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -1px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; -webkit-tap-highlight-color: transparent; }
+    .tab-btn i { font-size: 14px; }
+    .tab-btn.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+    .tab-btn:not(.active):hover { color: #334155; background: #f8fafc; }
+    .login-body { padding: 1.5rem 1.75rem; }
+    .role-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; margin-bottom: 1.25rem; }
+    .role-badge i { font-size: 12px; }
+    .role-badge.petugas { background: #eff6ff; color: #1d4ed8; }
+    .role-badge.warga { background: #f0fdf4; color: #15803d; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+    .form-hint { font-size: 12px; color: #6b7280; margin-bottom: 6px; display: block; }
+    .input-wrap { position: relative; }
+    .input-wrap input { width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 16px; font-family: inherit; background: #fff; color: #1e293b; outline: none; transition: border-color 0.15s, box-shadow 0.15s; -webkit-appearance: none; appearance: none; }
+    .input-wrap input:focus { border-color: #1d4ed8; box-shadow: 0 0 0 3px rgba(29,78,216,0.1); }
+    .input-wrap input.input-error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+    .input-wrap input::placeholder { color: #9ca3af; }
+    .input-wrap.mono input { font-family: 'Courier New', monospace; letter-spacing: 0.06em; }
+    .input-wrap input.has-toggle { padding-right: 40px; }
+    .field-error { font-size: 12px; color: #dc2626; margin-top: 5px; display: none; align-items: center; gap: 4px; }
+    .field-error.show { display: flex; }
+    .field-error i { font-size: 12px; }
+    .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #9ca3af; cursor: pointer; background: none; border: none; padding: 0; display: flex; align-items: center; transition: color 0.15s; }
+    .toggle-password:hover { color: #4b5563; }
+
+    /* NIK status indicator */
+    .nik-status { margin-top: 8px; padding: 8px 12px; border-radius: 8px; font-size: 12px; display: none; align-items: center; gap: 8px; }
+    .nik-status.checking { background: #eff6ff; color: #1d4ed8; display: flex; }
+    .nik-status.not-found { background: #fef2f2; color: #991b1b; display: flex; }
+    .nik-status.belum-daftar { background: #fffbeb; color: #92400e; display: flex; }
+    .nik-status.punya-akun { background: #f0fdf4; color: #15803d; display: flex; }
+    .nik-status i { font-size: 14px; flex-shrink: 0; }
+
+    /* password group hidden by default untuk warga */
+    #warga-pass-group { display: none; }
+
+    .btn-login { width: 100%; padding: 12px; background: #1d4ed8; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s, transform 0.1s; margin-top: 1.25rem; letter-spacing: 0.2px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+    .btn-login i { font-size: 17px; }
+    .btn-login:hover { background: #1e40af; }
+    .btn-login:active { transform: scale(0.98); }
+    .btn-login:disabled { background: #93c5fd; cursor: not-allowed; transform: none; }
+    .btn-register { width: 100%; padding: 11px; background: transparent; color: #374151; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: all 0.15s; margin-top: 10px; -webkit-tap-highlight-color: transparent; }
+    .btn-register i { font-size: 16px; }
+    .btn-register:hover { background: #f9fafb; border-color: #9ca3af; }
+    .message { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; align-items: center; gap: 8px; }
+    .message.error   { background: #fef2f2; color: #991b1b; border-left: 3px solid #dc2626; display: flex; }
+    .message.success { background: #f0fdf4; color: #15803d; border-left: 3px solid #16a34a; display: flex; }
+    .message.info    { background: #eff6ff; color: #1d4ed8; border-left: 3px solid #2563eb; display: flex; }
+    .message i { font-size: 15px; flex-shrink: 0; }
+    .login-card-footer { padding: 0.875rem 1.75rem; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: #fafafa; }
+    .footer-link { font-size: 12px; color: #64748b; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s; }
+    .footer-link:hover { color: #1d4ed8; }
+    .footer-link i { font-size: 13px; }
+    .tech-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+    .tech-chip { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 10px; color: #94a3b8; font-weight: 500; }
+    .tech-chip i { font-size: 10px; }
+    .login-sub-note { width: 100%; max-width: 480px; text-align: center; margin-top: 1rem; font-size: 11px; color: #a3a098; line-height: 1.6; }
+    .hidden { display: none !important; }
+    .password-wrapper { position: relative; }
+    .password-wrapper input { padding-right: 42px; }
+    @media (max-width: 520px) {
+      .login-page { padding: 1rem 0.75rem; }
+      .login-card { border-radius: 12px; }
+      .login-card-header { padding: 1.25rem 1.25rem 0; }
+      .login-body { padding: 1.25rem; }
+      .login-tabs { margin: 0 -1.25rem; padding: 0 1.25rem; }
+      .login-card-footer { padding: 0.75rem 1.25rem; }
+      .brand-text h1 { font-size: 13px; }
+    }
+    @media (min-width: 769px) {
+      .login-card { max-width: 520px; }
+      .trust-banner { max-width: 520px; }
+      .login-sub-note { max-width: 520px; }
+      .login-body { padding: 1.75rem 2rem; }
+      .login-card-header { padding: 1.75rem 2rem 0; }
+      .login-tabs { margin: 0 -2rem; padding: 0 2rem; }
+      .login-card-footer { padding: 1rem 2rem; }
+      .brand-text h1 { font-size: 15px; }
+      .brand-text p { font-size: 12px; }
+    }
+    .page { display: none; }
+    .page.active { display: block; }
+  </style>
+  <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<div id="app">
+  <div id="login-page">
+    <div class="login-page">
+
+      <div class="trust-banner">
+        <i class="ti ti-lock"></i>
+        <span>Portal resmi Kelurahan Cipedes &nbsp;·&nbsp; Koneksi aman &nbsp;·&nbsp; Enkripsi SHA-256</span>
+      </div>
+
+      <div class="login-card">
+        <div class="login-card-header">
+          <div class="brand-row">
+            <div class="brand-icon"><i class="ti ti-building-community"></i></div>
+            <div class="brand-text">
+              <h1>Sistem Penyaluran Bantuan Sosial</h1>
+              <p>Kelurahan Cipedes &nbsp;·&nbsp; Kecamatan Sukajadi &nbsp;·&nbsp; Kota Bandung</p>
+            </div>
+          </div>
+          <div class="login-tabs">
+            <button class="tab-btn active" id="tab-petugas" onclick="switchLoginTab('petugas')">
+              <i class="ti ti-shield-check"></i> Petugas / Admin
+            </button>
+            <button class="tab-btn" id="tab-warga" onclick="switchLoginTab('warga')">
+              <i class="ti ti-users"></i> Warga
+            </button>
+          </div>
+        </div>
+
+        <!-- Form Petugas -->
+        <div id="login-petugas" class="login-body">
+          <div class="role-badge petugas">
+            <i class="ti ti-shield-check"></i>
+            Akses terbatas &nbsp;·&nbsp; Petugas &amp; Admin
+          </div>
+          <div class="form-group">
+            <label for="petugas-username">Username</label>
+            <div class="input-wrap">
+              <input type="text" id="petugas-username" placeholder="Masukkan username Anda" autocomplete="username">
+            </div>
+            <div class="field-error" id="err-username">
+              <i class="ti ti-alert-circle"></i><span>Username wajib diisi</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="petugas-password">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="petugas-password" placeholder="Masukkan password" class="has-toggle" autocomplete="current-password">
+              <button type="button" class="toggle-password" onclick="togglePassword('petugas-password', this)">
+                <i class="ti ti-eye"></i>
+              </button>
+            </div>
+            <div class="field-error" id="err-password">
+              <i class="ti ti-alert-circle"></i><span>Password wajib diisi</span>
+            </div>
+          </div>
+          <div style="text-align:right;margin-top:-8px;margin-bottom:12px;" id="wrap-link-lupa-password">
+            <a href="#" id="link-lupa-password" onclick="event.preventDefault(); toggleLupaPasswordPanel(true)" style="font-size:12px;color:#1d4ed8;text-decoration:none;">Lupa Password?</a>
+          </div>
+          <div class="form-group hidden" id="petugas-otp-group">
+            <label for="petugas-otp">Kode OTP</label>
+            <div class="input-wrap">
+              <input type="text" id="petugas-otp" placeholder="Masukkan 6 digit kode OTP" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+            <div class="field-error" id="err-otp">
+              <i class="ti ti-alert-circle"></i><span>Kode OTP wajib diisi</span>
+            </div>
+            <div style="text-align:right;margin-top:6px;">
+              <a href="#" id="link-kirim-ulang-otp-petugas" onclick="event.preventDefault(); resendOtpPetugas();" style="font-size:12px;color:#1d4ed8;text-decoration:none;">Kirim Ulang OTP</a>
+            </div>
+          </div>
+
+          <div class="form-group hidden" id="lupa-password-panel">
+            <div style="background:#eff6ff;border-left:3px solid #1d4ed8;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#1e40af;">
+              Masukkan username Anda di atas, lalu klik tombol di bawah. Kode OTP akan dikirim ke nomor HP yang terdaftar.
+            </div>
+            <button type="button" class="btn-login" id="btn-kirim-otp-lupa" onclick="kirimOtpLupaPassword()" style="margin-bottom:10px;">
+              <i class="ti ti-send"></i> Kirim OTP ke HP Terdaftar
+            </button>
+            <div class="form-group hidden" id="lupa-otp-group">
+              <label for="lupa-otp">Kode OTP</label>
+              <div class="input-wrap">
+                <input type="text" id="lupa-otp" placeholder="Masukkan 6 digit kode OTP" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+              </div>
+              <div style="text-align:right;margin-top:6px;">
+                <a href="#" onclick="event.preventDefault(); kirimOtpLupaPassword();" style="font-size:12px;color:#1d4ed8;text-decoration:none;">Kirim Ulang OTP</a>
+              </div>
+            </div>
+            <div class="form-group hidden" id="lupa-password-baru-group">
+              <label for="lupa-password-baru">Password Baru</label>
+              <div class="input-wrap">
+                <input type="password" id="lupa-password-baru" placeholder="Minimal 6 karakter" class="has-toggle">
+                <button type="button" class="toggle-password" onclick="togglePassword('lupa-password-baru', this)">
+                  <i class="ti ti-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div id="lupa-password-message" class="message"></div>
+            <button type="button" class="btn-login hidden" id="btn-reset-password-lupa" onclick="resetPasswordLupa()" style="margin-bottom:8px;">
+              <i class="ti ti-circle-check"></i> Reset Password
+            </button>
+            <button type="button" onclick="toggleLupaPasswordPanel(false)" style="width:100%;padding:10px;background:transparent;border:1px solid #d1d5db;border-radius:8px;font-size:13px;cursor:pointer;color:#374151;">
+              Batal, Kembali ke Login
+            </button>
+          </div>
+
+          <div id="login-message" class="message"></div>
+          <button class="btn-login" id="btn-login-petugas" onclick="doLoginPetugas()">
+            <i class="ti ti-login"></i> Masuk
+          </button>
+        </div>
+
+        <!-- Form Warga -->
+        <div id="login-warga" class="login-body hidden">
+          <div class="role-badge warga">
+            <i class="ti ti-user"></i>
+            Akun warga terdaftar
+          </div>
+
+          <!-- NIK input -->
+          <div class="form-group">
+            <label for="warga-nik">Nomor Induk Kependudukan (NIK)</label>
+            <span class="form-hint">16 digit angka sesuai KTP Anda</span>
+            <div class="input-wrap mono">
+              <input type="text" id="warga-nik"
+                placeholder="3273XXXXXXXXXXXX"
+                maxlength="16"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="username">
+            </div>
+            <div class="field-error" id="err-nik">
+              <i class="ti ti-alert-circle"></i><span>NIK wajib diisi (16 digit angka)</span>
+            </div>
+            <!-- NIK status indicator -->
+            <div class="nik-status" id="nik-status"></div>
+          </div>
+
+          <!-- Password — hanya tampil kalau NIK punya akun -->
+          <div class="form-group" id="warga-pass-group">
+            <label for="warga-password">Password</label>
+            <div class="input-wrap">
+              <input type="password" id="warga-password" placeholder="Masukkan password" class="has-toggle" autocomplete="current-password">
+              <button type="button" class="toggle-password" onclick="togglePassword('warga-password', this)">
+                <i class="ti ti-eye"></i>
+              </button>
+            </div>
+            <div class="field-error" id="err-warga-password">
+              <i class="ti ti-alert-circle"></i><span>Password wajib diisi</span>
+            </div>
+          </div>
+
+          <div id="login-message-warga" class="message"></div>
+
+          <button class="btn-login" id="btn-warga-login" onclick="doLoginWarga()" style="display:none;">
+            <i class="ti ti-login"></i> Masuk
+          </button>
+
+          <button class="btn-register" id="btn-warga-daftar" onclick="showRegistrasiWarga()" style="display:none;">
+            <i class="ti ti-user-plus"></i> Daftar Akun Sekarang
+          </button>
+
+          <button class="btn-register" onclick="showRegistrasiWarga()" style="margin-top:10px;">
+            <i class="ti ti-user-plus"></i> Belum punya akun? Daftar di sini
+          </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-card-footer">
+          <a href="explorer.html" target="_blank" class="footer-link">
+            <i class="ti ti-link"></i> Block Explorer Publik
+            <i class="ti ti-external-link"></i>
+          </a>
+          <div class="tech-chips">
+            <span class="tech-chip"><i class="ti ti-circle-check"></i> Hyperledger Fabric 2.5</span>
+            <span class="tech-chip"><i class="ti ti-lock"></i> Raft</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="login-sub-note">
+        Portal ini hanya untuk warga dan petugas Kelurahan Cipedes yang terdaftar.<br>
+        Mengalami masalah? Hubungi petugas kelurahan setempat.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="assets/app.js?v=1786698834"></script>
+<script>
+  const API_BASE = window.location.hostname === 'localhost'
+    ? 'http://localhost:3000/api'
+    : `${window.location.protocol}//${window.location.hostname}/api`;
+
+  /* ── Tab switch ── */
+  function switchLoginTab(tab) {
+    const isPetugas = tab === 'petugas';
+    document.getElementById('login-petugas').classList.toggle('hidden', !isPetugas);
+    document.getElementById('login-warga').classList.toggle('hidden', isPetugas);
+    document.getElementById('tab-petugas').classList.toggle('active', isPetugas);
+    document.getElementById('tab-warga').classList.toggle('active', !isPetugas);
+    clearErrors();
+  }
+
+  /* ── Toggle password ── */
+  function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (!input || !icon) return;
+    const isPass = input.type === 'password';
+    input.type = isPass ? 'text' : 'password';
+    icon.className = isPass ? 'ti ti-eye-off' : 'ti ti-eye';
+  }
+
+  /* ── Clear errors ── */
+  function clearErrors() {
+    document.querySelectorAll('.field-error').forEach(el => el.classList.remove('show'));
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    const m1 = document.getElementById('login-message');
+    const m2 = document.getElementById('login-message-warga');
+    if (m1) { m1.className = 'message'; m1.innerHTML = ''; }
+    if (m2) { m2.className = 'message'; m2.innerHTML = ''; }
+  }
+
+  function showFieldError(inputId, errId) {
+    const inp = document.getElementById(inputId);
+    const err = document.getElementById(errId);
+    if (inp) inp.classList.add('input-error');
+    if (err) err.classList.add('show');
+  }
+
+  /* ── CEK NIK OTOMATIS ── */
+  let nikCheckTimeout = null;
+
+  document.getElementById('warga-nik').addEventListener('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+
+    // Reset tampilan
+    const statusEl = document.getElementById('nik-status');
+    const passGroup = document.getElementById('warga-pass-group');
+    const btnLogin = document.getElementById('btn-warga-login');
+    const btnDaftar = document.getElementById('btn-warga-daftar');
+
+    passGroup.style.display = 'none';
+    btnLogin.style.display = 'none';
+    btnDaftar.style.display = 'none';
+    statusEl.className = 'nik-status';
+    statusEl.innerHTML = '';
+
+    if (this.classList.contains('input-error') && this.value.length === 16) {
+      this.classList.remove('input-error');
+      document.getElementById('err-nik').classList.remove('show');
+    }
+
+    if (this.value.length !== 16) return;
+
+    // Debounce 400ms
+    clearTimeout(nikCheckTimeout);
+    const nik = this.value;
+    statusEl.className = 'nik-status checking';
+    statusEl.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 0.8s linear infinite;"></i><span>Memeriksa NIK...</span>';
+
+    nikCheckTimeout = setTimeout(async () => {
+      try {
+        const res = await fetch(`${API_BASE}/auth/warga/cek-nik/${nik}`);
+        const data = await res.json();
+
+        if (!data.success && data.status === 'tidak_ditemukan') {
+          statusEl.className = 'nik-status not-found';
+          statusEl.innerHTML = '<i class="ti ti-alert-circle"></i><span>NIK tidak terdaftar di kelurahan. Hubungi petugas untuk pendataan.</span>';
+        } else if (data.success && data.status === 'belum_daftar') {
+          statusEl.className = 'nik-status belum-daftar';
+          statusEl.innerHTML = '<i class="ti ti-alert-triangle"></i><span>NIK terdaftar tapi belum memiliki akun.</span>';
+          btnDaftar.style.display = 'flex';
+        } else if (data.success && data.status === 'punya_akun') {
+          statusEl.className = 'nik-status punya-akun';
+          statusEl.innerHTML = '<i class="ti ti-circle-check"></i><span>Akun ditemukan. Masukkan password Anda.</span>';
+          passGroup.style.display = 'block';
+          btnLogin.style.display = 'flex';
+          setTimeout(() => document.getElementById('warga-password').focus(), 100);
+        }
+      } catch {
+        statusEl.className = 'nik-status not-found';
+        statusEl.innerHTML = '<i class="ti ti-wifi-off"></i><span>Gagal terhubung ke server.</span>';
+      }
+    }, 400);
+  });
+
+  /* ── Login Petugas ── */
+  let petugasOtpStage = false;
+  function doLoginPetugas() {
+    clearErrors();
+    const username = document.getElementById('petugas-username').value.trim();
+    const password = document.getElementById('petugas-password').value;
+    let valid = true;
+    if (!username) { showFieldError('petugas-username', 'err-username'); valid = false; }
+    if (!password) { showFieldError('petugas-password', 'err-password'); valid = false; }
+    if (!valid) return;
+    if (!petugasOtpStage) {
+      loginPetugasTahap1();
+    } else {
+      const otp = document.getElementById('petugas-otp').value.trim();
+      if (!otp) { showFieldError('petugas-otp', 'err-otp'); return; }
+      loginPetugasTahap2(otp);
+    }
+  }
+
+  /* ── Login Warga ── */
+  function doLoginWarga() {
+    clearErrors();
+    const nik = document.getElementById('warga-nik').value.trim();
+    const password = document.getElementById('warga-password').value;
+    let valid = true;
+    if (!nik || nik.length !== 16) { showFieldError('warga-nik', 'err-nik'); valid = false; }
+    if (!password) { showFieldError('warga-password', 'err-warga-password'); valid = false; }
+    if (!valid) return;
+    loginWarga();
+  }
+
+  /* ── showMessage ── */
+  function showMessage(elementId, message, type) {
+    const iconMap = { error: 'ti-alert-circle', success: 'ti-circle-check', info: 'ti-info-circle' };
+    const tabWarga = document.getElementById('tab-warga');
+    if (elementId === 'login-message' && tabWarga && tabWarga.classList.contains('active')) {
+      elementId = 'login-message-warga';
+    }
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    el.innerHTML = `<i class="ti ${iconMap[type] || 'ti-info-circle'}"></i><span>${message}</span>`;
+    el.className = 'message ' + type;
+  }
+
+  /* ── Kirim ulang OTP login petugas ── */
+  async function resendOtpPetugas() {
+    document.getElementById('petugas-otp').value = '';
+    clearErrors();
+    await loginPetugasTahap1();
+  }
+
+  /* ── Lupa Password Petugas ── */
+  function toggleLupaPasswordPanel(show) {
+    document.getElementById('lupa-password-panel').classList.toggle('hidden', !show);
+    document.getElementById('petugas-password').closest('.form-group').classList.toggle('hidden', show);
+    document.getElementById('petugas-otp-group').classList.add('hidden');
+    document.getElementById('wrap-link-lupa-password').classList.toggle('hidden', show);
+    document.getElementById('btn-login-petugas').classList.toggle('hidden', show);
+    clearErrors();
+    if (!show) {
+      document.getElementById('lupa-otp-group').classList.add('hidden');
+      document.getElementById('lupa-password-baru-group').classList.add('hidden');
+      document.getElementById('btn-reset-password-lupa').classList.add('hidden');
+      document.getElementById('btn-kirim-otp-lupa').disabled = false;
+      document.getElementById('lupa-otp').value = '';
+      document.getElementById('lupa-password-baru').value = '';
+      const msg = document.getElementById('lupa-password-message');
+      if (msg) { msg.className = 'message'; msg.innerHTML = ''; }
+    }
+  }
+
+  async function kirimOtpLupaPassword() {
+    const username = document.getElementById('petugas-username').value.trim();
+    if (!username) return showMessage('lupa-password-message', 'Masukkan username terlebih dahulu di kolom atas', 'error');
+    try {
+      const res = await fetch(`${API_BASE}/auth/petugas/forgot-password`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('lupa-otp-group').classList.remove('hidden');
+        document.getElementById('lupa-password-baru-group').classList.remove('hidden');
+        document.getElementById('btn-reset-password-lupa').classList.remove('hidden');
+        document.getElementById('btn-kirim-otp-lupa').disabled = true;
+        showMessage('lupa-password-message', data.message + (data.otp_simulasi ? ' [Simulasi] Kode OTP: ' + data.otp_simulasi : ''), 'success');
+      } else {
+        showMessage('lupa-password-message', data.message, 'error');
+      }
+    } catch { showMessage('lupa-password-message', 'Gagal terhubung ke server', 'error'); }
+  }
+
+  async function resetPasswordLupa() {
+    const username = document.getElementById('petugas-username').value.trim();
+    const otp = document.getElementById('lupa-otp').value.trim();
+    const password_baru = document.getElementById('lupa-password-baru').value;
+    if (!otp || !password_baru) return showMessage('lupa-password-message', 'OTP dan password baru wajib diisi', 'error');
+    try {
+      const res = await fetch(`${API_BASE}/auth/petugas/reset-password`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, otp, password_baru })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showMessage('lupa-password-message', data.message, 'success');
+        setTimeout(() => {
+          toggleLupaPasswordPanel(false);
+          document.getElementById('petugas-password').value = '';
+        }, 2000);
+      } else {
+        showMessage('lupa-password-message', data.message, 'error');
+      }
+    } catch { showMessage('lupa-password-message', 'Gagal terhubung ke server', 'error'); }
+  }
+
+  /* ── Keyboard shortcuts ── */
+  document.getElementById('petugas-username').addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('petugas-password').focus();
+  });
+  document.getElementById('petugas-password').addEventListener('keypress', e => {
+    if (e.key === 'Enter') doLoginPetugas();
+  });
+  document.getElementById('petugas-otp').addEventListener('keypress', e => {
+    if (e.key === 'Enter') doLoginPetugas();
+  });
+  document.getElementById('warga-nik').addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('warga-password').focus();
+  });
+  document.getElementById('warga-password').addEventListener('keypress', e => {
+    if (e.key === 'Enter') doLoginWarga();
+  });
+
+  /* ── Clear error on typing ── */
+  ['petugas-username', 'petugas-password', 'warga-password'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const errMap = { 'petugas-username':'err-username', 'petugas-password':'err-password', 'warga-password':'err-warga-password' };
+    el.addEventListener('input', function () {
+      this.classList.remove('input-error');
+      const errEl = document.getElementById(errMap[id]);
+      if (errEl) errEl.classList.remove('show');
+    });
+  });
+</script>
+
+</body>
+</html>

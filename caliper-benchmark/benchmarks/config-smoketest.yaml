@@ -1,0 +1,22 @@
+test:
+  name: bansos-smoketest
+  description: Tes awal skala kecil sebelum benchmark penuh
+  workers:
+    number: 1
+  rounds:
+    - label: smoketest-create
+      txNumber: 10
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 2
+      workload:
+        module: workload/create-pengajuan.js
+    - label: smoketest-read
+      txNumber: 10
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 2
+      workload:
+        module: workload/read-pengajuan.js

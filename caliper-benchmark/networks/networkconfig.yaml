@@ -1,0 +1,34 @@
+name: Caliper Bansos Benchmark
+version: "2.0.0"
+
+caliper:
+  blockchain: fabric
+
+channels:
+  - channelName: bansos-channel
+    contracts:
+      - id: bansos
+
+organizations:
+  - mspid: KelurahanMSP
+    identities:
+      certificates:
+        - name: 'admin'
+          clientPrivateKey:
+            path: '/home/steave/bansos-project/bansos-app/fabric-network/crypto-config/peerOrganizations/kelurahan.cipedes.com/users/Admin@kelurahan.cipedes.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/home/steave/bansos-project/bansos-app/fabric-network/crypto-config/peerOrganizations/kelurahan.cipedes.com/users/Admin@kelurahan.cipedes.com/msp/signcerts/Admin@kelurahan.cipedes.com-cert.pem'
+    connectionProfile:
+      path: '/home/steave/bansos-project/bansos-app/backend/fabric/connection-profile.json'
+      discover: true
+  - mspid: PuskososMSP
+    identities:
+      certificates:
+        - name: 'admin'
+          clientPrivateKey:
+            path: '/home/steave/bansos-project/bansos-app/fabric-network/crypto-config/peerOrganizations/puskesos.cipedes.com/users/Admin@puskesos.cipedes.com/msp/keystore/priv_sk'
+          clientSignedCert:
+            path: '/home/steave/bansos-project/bansos-app/fabric-network/crypto-config/peerOrganizations/puskesos.cipedes.com/users/Admin@puskesos.cipedes.com/msp/signcerts/Admin@puskesos.cipedes.com-cert.pem'
+    connectionProfile:
+      path: '/home/steave/bansos-project/bansos-app/backend/fabric/connection-profile.json'
+      discover: true

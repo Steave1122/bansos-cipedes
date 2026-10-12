@@ -1,0 +1,14 @@
+test:
+  name: stress-e
+  description: 15 worker, 40 TPS
+  workers:
+    number: 15
+  rounds:
+    - label: stress-15worker-40tps
+      txNumber: 300
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 40
+      workload:
+        module: workload/create-pengajuan.js

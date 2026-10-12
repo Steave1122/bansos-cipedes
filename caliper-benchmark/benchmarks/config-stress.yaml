@@ -1,0 +1,34 @@
+test:
+  name: bansos-stress-test
+  description: Pengujian batas kapasitas dengan variasi worker dan TPS
+  rounds:
+    - label: stress-5worker-20tps
+      txNumber: 300
+      workers:
+        number: 5
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 20
+      workload:
+        module: workload/create-pengajuan.js
+    - label: stress-10worker-30tps
+      txNumber: 300
+      workers:
+        number: 10
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 30
+      workload:
+        module: workload/create-pengajuan.js
+    - label: stress-20worker-50tps
+      txNumber: 300
+      workers:
+        number: 20
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 50
+      workload:
+        module: workload/create-pengajuan.js

@@ -1,0 +1,156 @@
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: crypto-config/ordererOrganizations/cipedes.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+
+  - &Kelurahan
+    Name: KelurahanMSP
+    ID: KelurahanMSP
+    MSPDir: crypto-config/peerOrganizations/kelurahan.cipedes.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('KelurahanMSP.admin', 'KelurahanMSP.peer', 'KelurahanMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('KelurahanMSP.admin', 'KelurahanMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('KelurahanMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('KelurahanMSP.peer')"
+
+  - &Puskesos
+    Name: PuskososMSP
+    ID: PuskososMSP
+    MSPDir: crypto-config/peerOrganizations/puskesos.cipedes.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('PuskososMSP.admin', 'PuskososMSP.peer', 'PuskososMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('PuskososMSP.admin', 'PuskososMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('PuskososMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('PuskososMSP.peer')"
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_5: true
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+  Capabilities:
+    <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  Addresses:
+    - orderer.cipedes.com:7050
+  EtcdRaft:
+    Consenters:
+      - Host: orderer.cipedes.com
+        Port: 7050
+        ClientTLSCert: crypto-config/ordererOrganizations/cipedes.com/orderers/orderer.cipedes.com/tls/server.crt
+        ServerTLSCert: crypto-config/ordererOrganizations/cipedes.com/orderers/orderer.cipedes.com/tls/server.crt
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+  Capabilities:
+    <<: *OrdererCapabilities
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+
+Profiles:
+  BansosOrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+    Consortiums:
+      BansosConsortium:
+        Organizations:
+          - *Kelurahan
+          - *Puskesos
+
+  BansosChannel:
+    Consortium: BansosConsortium
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Kelurahan
+        - *Puskesos
+      Capabilities:
+        <<: *ApplicationCapabilities

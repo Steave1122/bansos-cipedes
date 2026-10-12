@@ -1,0 +1,78 @@
+{
+  "name": "bansos-network",
+  "version": "1.0.0",
+  "client": {
+    "organization": "Kelurahan",
+    "connection": {
+      "timeout": {
+        "peer": { "endorser": "300" },
+        "orderer": "300"
+      }
+    }
+  },
+  "organizations": {
+    "Kelurahan": {
+      "mspid": "KelurahanMSP",
+      "peers": ["peer0.kelurahan.cipedes.com"],
+      "certificateAuthorities": []
+    },
+    "Puskesos": {
+      "mspid": "PuskososMSP",
+      "peers": ["peer0.puskesos.cipedes.com"],
+      "certificateAuthorities": []
+    }
+  },
+  "orderers": {
+    "orderer.cipedes.com": {
+      "url": "grpcs://orderer.cipedes.com:7050",
+      "tlsCACerts": {
+        "path": "/home/steave/bansos-project/bansos-app/fabric-network/crypto-config/ordererOrganizations/cipedes.com/orderers/orderer.cipedes.com/tls/ca.crt"
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "orderer.cipedes.com",
+        "hostnameOverride": "orderer.cipedes.com"
+      }
+    }
+  },
+  "peers": {
+    "peer0.kelurahan.cipedes.com": {
+      "url": "grpcs://peer0.kelurahan.cipedes.com:7051",
+      "tlsCACerts": {
+        "path": "/home/steave/bansos-project/bansos-app/fabric-network/crypto-config/peerOrganizations/kelurahan.cipedes.com/tlsca/tlsca.kelurahan.cipedes.com-cert.pem"
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.kelurahan.cipedes.com",
+        "hostnameOverride": "peer0.kelurahan.cipedes.com"
+      }
+    },
+    "peer0.puskesos.cipedes.com": {
+      "url": "grpcs://peer0.puskesos.cipedes.com:9051",
+      "tlsCACerts": {
+        "path": "/home/steave/bansos-project/bansos-app/fabric-network/crypto-config/peerOrganizations/puskesos.cipedes.com/tlsca/tlsca.puskesos.cipedes.com-cert.pem"
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.puskesos.cipedes.com",
+        "hostnameOverride": "peer0.puskesos.cipedes.com"
+      }
+    }
+  },
+  "channels": {
+    "bansos-channel": {
+      "orderers": ["orderer.cipedes.com"],
+      "peers": {
+        "peer0.kelurahan.cipedes.com": {
+          "endorsingPeer": true,
+          "chaincodeQuery": true,
+          "ledgerQuery": true,
+          "eventSource": true
+        },
+        "peer0.puskesos.cipedes.com": {
+          "endorsingPeer": true,
+          "chaincodeQuery": true,
+          "ledgerQuery": true,
+          "eventSource": false
+        }
+      }
+    }
+  }
+}

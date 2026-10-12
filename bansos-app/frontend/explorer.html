@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Block Explorer — Bantuan Sosial Kelurahan Cipedes</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f0ede8;
+      --surface:  #ffffff;
+      --border:   #f1f5f9;
+      --border-md:#e2e8f0;
+      --text:     #0f172a;
+      --text-sec: #64748b;
+      --text-ter: #94a3b8;
+      --blue:     #1d4ed8;
+      --blue-light:#eff6ff;
+      --green:    #16a34a;
+      --green-light:#f0fdf4;
+      --red:      #dc2626;
+      --red-light:#fef2f2;
+      --amber:    #d97706;
+      --amber-light:#fffbeb;
+      --purple:   #7c3aed;
+      --purple-light:#f5f3ff;
+      --teal:     #0891b2;
+      --teal-light:#ecfeff;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a1a1a;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 56px;
+      padding: 8px 0;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-logo i { font-size: 17px; color: #fff; }
+    .header-brand h1 { font-size: 14px; font-weight: 600; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header-brand p  { font-size: 11px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .dot-live {
+      width: 7px;
+      height: 7px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #94a3b8;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.1); color: #f1f5f9; }
+    .back-btn i { font-size: 14px; }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 24px 48px;
+    }
+
+    /* ── INFO BANNER ── */
+    .info-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--blue-light);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #1e40af;
+    }
+    .info-banner i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 480px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .sc-blue::before   { background: linear-gradient(90deg,#3b82f6,#60a5fa); }
+    .sc-green::before  { background: linear-gradient(90deg,#10b981,#34d399); }
+    .sc-amber::before  { background: linear-gradient(90deg,#f59e0b,#fbbf24); }
+    .sc-teal::before   { background: linear-gradient(90deg,#0891b2,#22d3ee); }
+    .sc-purple::before { background: linear-gradient(90deg,#8b5cf6,#a78bfa); }
+
+    .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .stat-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .stat-icon i { font-size: 16px; }
+    .si-blue   { background: var(--blue-light); }   .si-blue i   { color: #3b82f6; }
+    .si-green  { background: var(--green-light); }  .si-green i  { color: #10b981; }
+    .si-amber  { background: var(--amber-light); }  .si-amber i  { color: #f59e0b; }
+    .si-teal   { background: var(--teal-light); }   .si-teal i   { color: #0891b2; }
+    .si-purple { background: var(--purple-light); } .si-purple i { color: #8b5cf6; }
+
+    .stat-num   { font-size: 24px; font-weight: 800; color: var(--text); line-height: 1; }
+    .stat-label { font-size: 11px; color: var(--text-ter); margin-top: 4px; font-weight: 500; }
+
+    /* ── SEARCH CARD ── */
+    .search-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+    .search-card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-ter);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .search-card-title i { font-size: 14px; }
+    .search-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .search-input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+    .search-input-wrap input {
+      width: 100%;
+      padding: 10px 80px 10px 14px;
+      border: 1.5px solid var(--border-md);
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: monospace;
+      outline: none;
+      transition: border-color 0.15s;
+      color: var(--text);
+    }
+    .search-input-wrap input:focus { border-color: var(--blue); }
+    .search-input-wrap input::placeholder { color: var(--text-ter); }
+    .search-input-actions {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 4px;
+    }
+    .search-input-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-ter);
+      padding: 4px 6px;
+      border-radius: 4px;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+    }
+    .search-input-actions button:hover { background: #f1f5f9; color: var(--text-sec); }
+    .btn-verify {
+      padding: 10px 18px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .btn-verify:hover { opacity: 0.88; }
+    .btn-verify i { font-size: 15px; }
+
+    #search-result { margin-top: 14px; }
+    .result-found {
+      background: var(--green-light);
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .result-found-header {
+      padding: 10px 16px;
+      background: var(--green);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .result-found-header i { font-size: 16px; }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      font-size: 13px;
+    }
+    .result-row:last-child { border: none; }
+    .result-row .key { color: var(--text-sec); }
+    .result-row .val { font-weight: 600; text-align: right; max-width: 60%; word-break: break-all; }
+    .result-not-found {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--red-light);
+      border: 1px solid #fecaca;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--red);
+    }
+    .result-not-found i { font-size: 16px; flex-shrink: 0; }
+
+    /* ── FILTER ROW ── */
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filter-label { font-size: 12px; color: var(--text-ter); font-weight: 500; }
+    .filter-btn {
+      border: 1px solid var(--border-md);
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--text-sec);
+    }
+    .filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .search-nama {
+      margin-left: auto;
+      padding: 6px 12px;
+      border: 1px solid var(--border-md);
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+      width: 200px;
+      color: var(--text);
+      transition: border-color 0.15s;
+    }
+    .search-nama:focus { border-color: var(--blue); }
+    @media (max-width: 600px) { .search-nama { width: 100%; margin-left: 0; } }
+
+    /* ── TABLE CARD ── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .table-card-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .table-card-header h2 { font-size: 14px; font-weight: 600; color: var(--text); }
+    .table-card-header span { font-size: 12px; color: var(--text-ter); }
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th {
+      padding: 9px 16px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-ter);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      background: #fafafa;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    tbody tr:last-child { border: none; }
+    tbody tr:hover { background: #f8fafc; }
+    td { padding: 11px 16px; vertical-align: middle; }
+
+    /* name cell */
+    .name-cell { display: flex; align-items: center; gap: 8px; }
+    .name-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .av-blue   { background: linear-gradient(135deg,#3b82f6,#8b5cf6); }
+    .av-green  { background: linear-gradient(135deg,#10b981,#3b82f6); }
+    .av-amber  { background: linear-gradient(135deg,#f59e0b,#ef4444); }
+    .av-purple { background: linear-gradient(135deg,#8b5cf6,#ec4899); }
+    .av-red    { background: linear-gradient(135deg,#ef4444,#f97316); }
+    .av-teal   { background: linear-gradient(135deg,#14b8a6,#3b82f6); }
+
+    /* TX ID */
+    .tx-id {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--text-ter);
+      max-width: 110px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: color 0.15s;
+      display: block;
+    }
+    .tx-id:hover { color: var(--text-sec); }
+
+    /* badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge::before { content:''; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+    .badge-registrasi { background: var(--green-light);  color: var(--green); } .badge-registrasi::before { background: var(--green); }
+    .badge-pengajuan  { background: var(--blue-light);   color: var(--blue); }  .badge-pengajuan::before  { background: var(--blue); }
+    .badge-verifikasi { background: var(--amber-light);  color: var(--amber); } .badge-verifikasi::before { background: var(--amber); }
+    .badge-penerima   { background: var(--teal-light);   color: var(--teal); }  .badge-penerima::before   { background: var(--teal); }
+    .badge-konfirmasi { background: var(--purple-light); color: var(--purple); }.badge-konfirmasi::before { background: var(--purple); }
+
+    /* loading */
+    .loading { text-align: center; padding: 48px; color: var(--text-sec); }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2.5px solid var(--border-md);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--text-ter);
+      border-top: 1px solid var(--border);
+      margin-top: 24px;
+    }
+
+    /* mobile */
+    @media (max-width: 768px) {
+      .header-inner { min-height: 50px; height: auto; }
+      .header-brand p { max-width: 150px; }
+      .main { padding: 16px 12px 40px; }
+      .header-brand h1 { font-size: 13px; }
+      .back-btn span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-logo"><i class="ti ti-link"></i></div>
+      <div>
+        <h1>Block Explorer — Bantuan Sosial</h1>
+        <p>Kelurahan Cipedes · Hyperledger Fabric 2.5 · SHA-256</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="live-badge">
+        <div class="dot-live"></div>
+        <span>Jaringan Aktif</span>
+      </div>
+      <a href="index.html" class="back-btn">
+        <i class="ti ti-arrow-left"></i>
+        <span>Kembali</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Info banner -->
+  <div class="info-banner">
+    <i class="ti ti-info-circle"></i>
+    <span>Halaman ini menampilkan seluruh transaksi yang tercatat di ledger blockchain secara publik dan transparan. Setiap transaksi memiliki Transaction ID unik yang dapat diverifikasi kapan saja untuk memastikan keaslian data penyaluran bantuan sosial.</span>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card sc-green">
+      <div class="stat-top"><div class="stat-icon si-green"><i class="ti ti-user-check"></i></div></div>
+      <div class="stat-num">...</div><div class="stat-label">Registrasi Akun</div>
+    </div>
+    <div class="stat-card sc-blue">
+      <div class="stat-top"><div class="stat-icon si-blue"><i class="ti ti-clipboard-list"></i></div></div>
+      <div class="stat-num">...</div><div class="stat-label">Pengajuan</div>
+    </div>
+    <div class="stat-card sc-amber">
+      <div class="stat-top"><div class="stat-icon si-amber"><i class="ti ti-circle-check"></i></div></div>
+      <div class="stat-num">...</div><div class="stat-label">Verifikasi</div>
+    </div>
+    <div class="stat-card sc-teal">
+      <div class="stat-top"><div class="stat-icon si-teal"><i class="ti ti-gift"></i></div></div>
+      <div class="stat-num">...</div><div class="stat-label">Penerima Ditetapkan</div>
+    </div>
+    <div class="stat-card sc-purple">
+      <div class="stat-top"><div class="stat-icon si-purple"><i class="ti ti-scan"></i></div></div>
+      <div class="stat-num">...</div><div class="stat-label">Konfirmasi Penerimaan</div>
+    </div>
+  </div>
+
+  <!-- Search TX ID -->
+  <div class="search-card">
+    <div class="search-card-title">
+      <i class="ti ti-search"></i>
+      Verifikasi Transaction ID
+    </div>
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <input type="text" id="txid-input" placeholder="Masukkan Transaction ID (64 karakter hex)..." />
+        <div class="search-input-actions">
+          <button onclick="navigator.clipboard.readText().then(t=>{document.getElementById('txid-input').value=t;verifyTxId();})" title="Paste">
+            <i class="ti ti-clipboard"></i>
+          </button>
+          <button onclick="document.getElementById('txid-input').value='';document.getElementById('search-result').innerHTML='';" title="Bersihkan">
+            <i class="ti ti-x"></i>
+          </button>
+        </div>
+      </div>
+      <button class="btn-verify" onclick="verifyTxId()">
+        <i class="ti ti-search"></i> Verifikasi
+      </button>
+    </div>
+    <div id="search-result"></div>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-row">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="setFilter('semua', this)">Semua</button>
+    <button class="filter-btn" onclick="setFilter('Registrasi Akun', this)">Registrasi</button>
+    <button class="filter-btn" onclick="setFilter('Pengajuan Bantuan', this)">Pengajuan</button>
+    <button class="filter-btn" onclick="setFilter('Verifikasi Berjenjang', this)">Verifikasi</button>
+    <button class="filter-btn" onclick="setFilter('Penetapan Penerima', this)">Penerima</button>
+    <button class="filter-btn" onclick="setFilter('Konfirmasi Penerimaan', this)">Konfirmasi</button>
+    <input type="text" class="search-nama" id="search-nama" placeholder="🔍 Cari nama warga..." oninput="renderTable()" />
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <div class="table-card-header">
+      <h2>Riwayat Transaksi Blockchain</h2>
+      <span id="count-label">Memuat...</span>
+    </div>
+    <div class="table-wrap">
+      <div id="table-container" class="loading">
+        <div class="spinner"></div>
+        <p>Memuat data dari ledger blockchain...</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Block Explorer — Sistem Penyaluran Bantuan Sosial Kelurahan Cipedes · Hyperledger Fabric 2.5 · SHA-256 · Raft Consensus
+</footer>
+
+<script>
+  let allData = [];
+  let currentFilter = 'semua';
+
+  const API_BASE = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':'+window.location.port : ''}/api`;
+
+  const badgeClass = {
+    'Registrasi Akun':    'badge-registrasi',
+    'Pengajuan Bantuan':  'badge-pengajuan',
+    'Penetapan Penerima': 'badge-penerima',
+    'Konfirmasi Penerimaan':'badge-konfirmasi',
+  };
+  function getBadgeClass(jenis) {
+    if ((jenis||'').startsWith('Verifikasi')) return 'badge-verifikasi';
+    return badgeClass[jenis] || '';
+  }
+
+  const AV_COLORS = ['av-blue','av-green','av-amber','av-purple','av-red','av-teal'];
+  function getAvColor(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h);
+    return AV_COLORS[Math.abs(h) % AV_COLORS.length];
+  }
+  function getInitials(name) {
+    return (name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  }
+
+  function formatDate(d) {
+    if (!d) return '—';
+    return new Date(d).toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function shortTxId(tx) {
+    if (!tx) return '—';
+    return tx.substring(0,10) + '...' + tx.substring(tx.length-6);
+  }
+
+  function copyTx(tx) {
+    navigator.clipboard.writeText(tx).then(() => {
+      showToastExplorer('TX ID berhasil disalin!');
+    });
+  }
+
+  function showToastExplorer(msg) {
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0f172a;color:#f1f5f9;padding:10px 20px;border-radius:8px;font-size:13px;z-index:9999;display:flex;align-items:center;gap:8px;';
+    t.innerHTML = `<i class="ti ti-circle-check" style="color:#4ade80;font-size:16px;"></i>${msg}`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
+  }
+
+  function setFilter(type, btn) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTable();
+  }
+
+  function renderTable() {
+    const keyword = document.getElementById('search-nama').value.toLowerCase();
+    let filtered = allData;
+    if (currentFilter !== 'semua') {
+  filtered = currentFilter === 'Verifikasi Berjenjang'
+    ? filtered.filter(d => (d.jenis_transaksi||'').startsWith('Verifikasi'))
+    : filtered.filter(d => d.jenis_transaksi === currentFilter);
+    }
+    if (keyword) filtered = filtered.filter(d =>
+      (d.nama_warga||'').toLowerCase().includes(keyword) ||
+      (d.tx_id_blockchain||'').toLowerCase().includes(keyword)
+    );
+
+    document.getElementById('count-label').textContent = `${filtered.length} transaksi`;
+
+    if (filtered.length === 0) {
+      document.getElementById('table-container').innerHTML = `
+        <div style="text-align:center;padding:40px;color:#94a3b8;">
+          <i class="ti ti-inbox" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+          Tidak ada transaksi ditemukan
+        </div>`;
+      return;
+    }
+
+    document.getElementById('table-container').innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Jenis Transaksi</th>
+            <th>Nama Warga</th>
+            <th>Jenis Bantuan</th>
+            <th>Aktor</th>
+            <th>Keterangan</th>
+            <th>Tanggal</th>
+            <th>TX ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filtered.map((d,i) => `
+            <tr>
+              <td style="color:#94a3b8;font-size:11px;">${i+1}</td>
+              <td><span class="badge ${getBadgeClass(d.jenis_transaksi)}">${escapeHtml(d.jenis_transaksi)}</span></td>
+              <td>
+                <div class="name-cell">
+                  <div class="name-avatar ${getAvColor(d.nama_warga||'?')}">${escapeHtml(getInitials(d.nama_warga||'?'))}</div>
+                  <span style="font-size:12px;font-weight:500;">${escapeHtml(d.nama_warga)||'—'}</span>
+                </div>
+              </td>
+              <td style="font-size:12px;color:#64748b;">${escapeHtml(d.jenis_bantuan)||'—'}</td>
+              <td style="font-size:12px;color:#64748b;">${d.aktor ? escapeHtml(d.aktor) : '<span style="color:#cbd5e1">Sistem</span>'}</td>
+              <td style="font-size:12px;color:#64748b;max-width:220px;">${escapeHtml(d.keterangan)||'—'}</td>
+              <td style="font-size:12px;color:#64748b;white-space:nowrap;">${formatDate(d.tanggal)}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:5px;">
+                  <span class="tx-id" title="${escapeHtml(d.tx_id_blockchain)}" onclick="copyTx('${d.tx_id_blockchain}')">${shortTxId(d.tx_id_blockchain)}</span>
+                  <button onclick="copyTx('${d.tx_id_blockchain}')" title="Salin"
+                    style="background:none;border:1px solid #e2e8f0;border-radius:4px;padding:2px 5px;cursor:pointer;font-size:10px;color:#94a3b8;flex-shrink:0;">
+                    <i class="ti ti-copy" style="font-size:11px;"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  async function verifyTxId() {
+    const txid = document.getElementById('txid-input').value.trim();
+    const resultDiv = document.getElementById('search-result');
+    if (!txid) return;
+
+    resultDiv.innerHTML = `<div style="font-size:13px;color:#64748b;padding:10px 0;display:flex;align-items:center;gap:8px;">
+      <div class="spinner" style="width:18px;height:18px;border-width:2px;margin:0;"></div> Memeriksa TX ID...
+    </div>`;
+
+    try {
+      const res = await fetch(`${API_BASE}/blockchain/explorer/verify/${txid}`);
+      const data = await res.json();
+
+      if (data.success) {
+        const d = data.data;
+        const isRegistrasi = d.jenis === 'Registrasi Akun Warga';
+        resultDiv.innerHTML = `
+          <div class="result-found">
+            <div class="result-found-header">
+              <i class="ti ti-circle-check"></i>
+              TX ID Valid — ${escapeHtml(d.jenis)}
+            </div>
+            <div class="result-row"><span class="key">Nama Warga</span><span class="val">${escapeHtml(d.nama_warga)}</span></div>
+            ${!isRegistrasi ? `<div class="result-row"><span class="key">Jenis Bantuan</span><span class="val">${escapeHtml(d.jenis_bantuan)}</span></div>` : ''}
+            <div class="result-row"><span class="key">Keterangan</span><span class="val">${escapeHtml(d.keterangan)||'—'}</span></div>
+            <div class="result-row"><span class="key">Tanggal</span><span class="val">${formatDate(d.tanggal)}</span></div>
+            <div class="result-row">
+              <span class="key">TX ID</span>
+              <span class="val" style="font-family:monospace;font-size:11px;display:flex;align-items:center;gap:6px;">
+                ${txid.substring(0,20)}...
+                <button onclick="copyTx('${txid}')" style="background:none;border:1px solid #e2e8f0;border-radius:4px;padding:2px 6px;cursor:pointer;">
+                  <i class="ti ti-copy" style="font-size:11px;color:#94a3b8;"></i>
+                </button>
+              </span>
+            </div>
+          </div>`;
+      } else {
+        resultDiv.innerHTML = `
+          <div class="result-not-found">
+            <i class="ti ti-circle-x"></i>
+            TX ID tidak ditemukan dalam ledger blockchain.
+          </div>`;
+      }
+    } catch (e) {
+      resultDiv.innerHTML = `
+        <div class="result-not-found">
+          <i class="ti ti-wifi-off"></i>
+          Gagal terhubung ke jaringan blockchain.
+        </div>`;
+    }
+  }
+
+  document.getElementById('txid-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') verifyTxId();
+  });
+
+  async function loadData() {
+    try {
+      const res = await fetch(`${API_BASE}/blockchain/explorer`);
+      const json = await res.json();
+      if (json.success) {
+        allData = json.data;
+        const s = json.stats;
+        const statCards = document.querySelectorAll('#stats-grid .stat-card');
+        const nums = [s.total_registrasi||0, s.total_pengajuan||0, s.total_verifikasi||0, s.total_penerima||0, s.total_konfirmasi||0];
+        statCards.forEach((card, i) => {
+          card.querySelector('.stat-num').textContent = nums[i];
+        });
+        renderTable();
+      }
+    } catch (e) {
+      document.getElementById('table-container').innerHTML = `
+        <div style="text-align:center;padding:40px;color:#dc2626;">
+          <i class="ti ti-wifi-off" style="font-size:32px;display:block;margin-bottom:8px;"></i>
+          Gagal memuat data. Pastikan server berjalan.
+        </div>`;
+    }
+  }
+
+  loadData();
+</script>
+</body>
+</html>
